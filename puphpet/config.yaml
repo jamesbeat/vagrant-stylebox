@@ -4,10 +4,11 @@ vagrantfile:
         box: puphpet/ubuntu1404-x64
         box_url: puphpet/ubuntu1404-x64
         hostname: stylebox.local
-        memory: '1024'
+        memory: '4096'
         cpus: '2'
         chosen_provider: virtualbox
         network:
+            public_network: 10.0.1.28
             private_network: 192.168.56.101
             forwarded_port:
                 vflnp_17tbw341sb9o:
@@ -53,7 +54,7 @@ vagrantfile:
                         - .vagrant/
                         - .git/
                     auto: 'true'
-                owner: vagrant
+                owner: www-data
                 group: www-data
         usable_port_range:
             start: 10200
@@ -78,6 +79,8 @@ users_groups:
     groups:
         - www-data
     users:
+        - 'www-data:www-data'
+        - 'vagrant:www-data'
 locale:
     install: '1'
     settings:
@@ -148,7 +151,7 @@ nginx:
 apache:
     install: '1'
     settings:
-        user: vagrant
+        user: www-data
         group: www-data
         default_vhost: true
         manage_user: false
@@ -162,7 +165,7 @@ apache:
             servername: stylebox.atlas
             serveraliases:
                 - stylebox.atlas
-            docroot: /var/www/styleguide
+            docroot: /var/www/html/styleguide
             port: '80'
             setenv:
                 - 'APP_ENV dev'
@@ -176,7 +179,7 @@ apache:
             ssl_cipher: ''
             directories:
                 avd_4f41kxrs6swa:
-                    path: /var/www/styleguide
+                    path: /var/www/html/styleguide
                     options:
                         - Indexes
                         - FollowSymlinks
@@ -197,7 +200,7 @@ apache:
             servername: stylebox.barfinder
             serveraliases:
                 - stylebox.barfinder
-            docroot: /var/www/styleguide
+            docroot: /var/www/html/styleguide
             port: '80'
             custom_fragment: ''
             ssl: '0'
@@ -209,7 +212,7 @@ apache:
             ssl_cipher: ''
         av_jenab8kaiwte:
             servername: stylebox
-            docroot: /var/www
+            docroot: /var/www/html
             port: '80'
             custom_fragment: ''
             ssl: '0'
@@ -244,7 +247,7 @@ php:
                 prefix: www
                 listen: '127.0.0.1:9000'
                 security.limit_extensions: .php
-                user: www-user
+                user: www-data
                 group: www-data
     composer: '1'
     composer_home: ''
@@ -310,7 +313,7 @@ mysql:
         version: '5.6'
         root_password: sushi
         override_options: {  }
-    adminer: 0
+    adminer: 1
     users:
         mysqlnu_vuq382m39kb8:
             name: styler

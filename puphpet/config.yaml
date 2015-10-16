@@ -9,7 +9,6 @@ vagrantfile:
         chosen_provider: virtualbox
         network:
             public_network: 10.0.1.28
-            private_network: 192.168.56.101
             forwarded_port:
                 vflnp_17tbw341sb9o:
                     host: '8080'
@@ -388,7 +387,7 @@ sqlite:
     adminer: 0
     databases: {  }
 mailcatcher:
-    install: '1'
+    install: '0'
     settings:
         smtp_ip: 0.0.0.0
         smtp_port: 1025

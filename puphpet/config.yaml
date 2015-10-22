@@ -4,11 +4,11 @@ vagrantfile:
         box: puphpet/ubuntu1404-x64
         box_url: puphpet/ubuntu1404-x64
         hostname: stylebox.local
-        memory: '4096'
-        cpus: '2'
+        memory: '8192'
+        cpus: '8'
         chosen_provider: virtualbox
         network:
-            public_network: 10.0.1.28
+            public_network: 10.0.1.181
             private_network: 192.168.56.101
             forwarded_port:
                 vflnp_17tbw341sb9o:
@@ -22,6 +22,7 @@ vagrantfile:
             virtualbox:
                 modifyvm:
                     natdnshostresolver1: 'on'
+                    rtcuseutc: 'on'
                 showgui: '0'
             vmware:
                 numvcpus: 1
@@ -38,7 +39,7 @@ vagrantfile:
                     - '--parser future'
         synced_folder:
             vflsf_g31fi4mm270m:
-                source: /Users/localserver/vagrant/stylebox/var/www
+                source: /Users/vagranthost/Vagrant/stylebox/var/www
                 target: /var/www
                 sync_type: nfs
                 smb:
@@ -62,11 +63,11 @@ vagrantfile:
     ssh:
         host: null
         port: null
-        private_key_path: null
+        private_key_path: /Users/vagranthost/.ssh/id_rsa
         username: vagrant
         guest_port: null
         keep_alive: true
-        forward_agent: false
+        forward_agent: true
         forward_x11: false
         shell: 'bash -l'
     vagrant:
@@ -232,13 +233,19 @@ php:
             - intl
             - mcrypt
             - imagick
+            - gd
         pear: {  }
-        pecl: {  }
+        pecl:
+            - APC
+            - uploadprogress
     ini:
         display_errors: 'On'
         error_reporting: '-1'
         session.save_path: /var/lib/php/session
         date.timezone: UTC
+        memory_limit: '512M'
+        upload_max_filesize: '256M'
+        post_max_size: '128M'
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
@@ -286,7 +293,7 @@ ruby:
     install: '1'
     versions: {  }
 python:
-    install: '1'
+    install: '0'
     packages: {  }
     versions: {  }
 nodejs:

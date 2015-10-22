@@ -1,4 +1,4 @@
-#Introduction
+##Introduction
 
 This covers the Intallation and setup of a Drupal Multisite instance on a Vagrant Box hosted on a remote Machine , controlled vie Drush from a remote Machine.
 
@@ -11,7 +11,7 @@ Remote Host Machine: The Server hosting your Vagrant Box virtualization Environm
 Remote Guest Machine: The virtual Server hosted on the Remote Host Machine
 
 
-#Installation
+##Installation
 
 Download Vagrant from
 [www.vagrantup.com/downloads](http://www.vagrantup.com/downloads)
@@ -26,31 +26,52 @@ $ cd vagrant_project
 $ vagrant init
 ```
 
-#Setup
+##Setup
 
 ```shell
 $ vagrant plugin install vagrant-vbguest
 ```
 
-#Launch
+##Create Keypair
+
+Create Private Key on Host machine:
+
+```shell
+ssh-keygen -t rsa -b 4096 -C "vagranthost"
+```
+
+Copy private key from Host Machine at puphpet/files/dot/ssh/id_rsa to your remote machine, for example in directory /Users/Basti/.ssh/stylebox/id_rsa
+
+
+##Launch
 
 ```shell
 $ sudo vagrant up
 ```
 
-#Interact
+##Interact
 
-## Login on Host Machine
+
+### Login on Host Machine
 
 ```shell
 $ vagrant ssh
 ```
 
-## Login from Remote Machine
+Show Network interfaces
 
-### Getting Keys
+```shell
+$ ifconfig
+```
 
-Copy private key from Host Machine at puphpet/files/dot/ssh/id_rsa to your remote machine, for example in directory /Users/Basti/.ssh/stylebox/id_rsa
+Show folder permissions 
+
+```shell
+ls -l
+```
+
+### Login from Remote Machine
+
 
 ```shell
 $ ssh vagrant@10.0.1.28 -o PasswordAuthentication=no -i /Users/Basti/.ssh/stylebox/id_rsa -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 2223

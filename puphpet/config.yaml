@@ -4,8 +4,8 @@ vagrantfile:
         box: puphpet/ubuntu1404-x64
         box_url: puphpet/ubuntu1404-x64
         hostname: stylebox.local
-        memory: '8192'
-        cpus: '8'
+        memory: '4096'
+        cpus: '4'
         chosen_provider: virtualbox
         network:
             public_network: 10.0.1.181
@@ -63,11 +63,12 @@ vagrantfile:
     ssh:
         host: null
         port: null
-        private_key_path: /Users/vagranthost/.ssh/id_rsa
+        insert_key: false
+        private_key_path: '/Users/vagranthost/Vagrant/.ssh/id_rsa'
         username: vagrant
         guest_port: null
         keep_alive: true
-        forward_agent: true
+        forward_agent: false
         forward_x11: false
         shell: 'bash -l'
     vagrant:
@@ -95,60 +96,6 @@ firewall:
 cron:
     install: '1'
     jobs: {  }
-nginx:
-    install: '0'
-    settings:
-        default_vhost: 1
-        proxy_buffer_size: 128k
-        proxy_buffers: '4 256k'
-    upstreams: {  }
-    vhosts:
-        nxv_9ojtfl8yzctf:
-            server_name: awesome.dev
-            server_aliases:
-                - www.awesome.dev
-            www_root: /var/www/awesome
-            listen_port: '80'
-            index_files:
-                - index.html
-                - index.htm
-                - index.php
-            client_max_body_size: 1m
-            ssl: '0'
-            ssl_cert: ''
-            ssl_key: ''
-            ssl_port: '443'
-            ssl_protocols: ''
-            ssl_ciphers: ''
-            rewrite_to_https: '1'
-            spdy: '1'
-            locations:
-                nxvl_89v11kvevk03:
-                    location: /
-                    autoindex: 'off'
-                    internal: 'false'
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - /index.php$is_args$args
-                    fastcgi: ''
-                    fastcgi_index: ''
-                    fastcgi_split_path: ''
-                nxvl_sbm4gvv4k5r8:
-                    location: '~ \.php$'
-                    autoindex: 'off'
-                    internal: 'false'
-                    try_files:
-                        - $uri
-                        - $uri/
-                        - /index.php$is_args$args
-                    fastcgi: '127.0.0.1:9000'
-                    fastcgi_index: index.php
-                    fastcgi_split_path: '^(.+\.php)(/.*)$'
-                    fast_cgi_params_extra:
-                        - 'SCRIPT_FILENAME $request_filename'
-                        - 'APP_ENV dev'
-    proxies: {  }
 apache:
     install: '1'
     settings:
@@ -235,17 +182,12 @@ php:
             - imagick
             - gd
         pear: {  }
-        pecl:
-            - APC
-            - uploadprogress
+        pecl: {  }
     ini:
         display_errors: 'On'
         error_reporting: '-1'
         session.save_path: /var/lib/php/session
         date.timezone: UTC
-        memory_limit: '512M'
-        upload_max_filesize: '256M'
-        post_max_size: '128M'
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
@@ -258,31 +200,6 @@ php:
                 group: www-data
     composer: '1'
     composer_home: ''
-xdebug:
-    install: '0'
-    settings:
-        xdebug.default_enable: '1'
-        xdebug.remote_autostart: '0'
-        xdebug.remote_connect_back: '1'
-        xdebug.remote_enable: '1'
-        xdebug.remote_handler: dbgp
-        xdebug.remote_port: '9000'
-blackfire:
-    install: '0'
-    settings:
-        server_id: ''
-        server_token: ''
-        agent:
-            http_proxy: ''
-            https_proxy: ''
-            log_file: stderr
-            log_level: '1'
-        php:
-            agent_timeout: '0.25'
-            log_file: ''
-            log_level: '1'
-xhprof:
-    install: '0'
 wpcli:
     install: '0'
     version: v0.19.0
@@ -299,21 +216,6 @@ python:
 nodejs:
     install: '0'
     npm_packages: {  }
-hhvm:
-    install: '0'
-    nightly: 0
-    composer: '1'
-    composer_home: ''
-    settings: {  }
-    server_ini:
-        hhvm.server.host: 127.0.0.1
-        hhvm.server.port: '9000'
-        hhvm.log.use_log_file: '1'
-        hhvm.log.file: /var/log/hhvm/error.log
-    php_ini:
-        display_errors: 'On'
-        error_reporting: '-1'
-        date.timezone: UTC
 mysql:
     install: '1'
     settings:
@@ -346,89 +248,3 @@ mysql:
             table: '*.*'
             privileges:
                 - ALL
-mariadb:
-    install: '0'
-    settings:
-        version: '10.0'
-        root_password: '123'
-        override_options: {  }
-    adminer: 0
-    users:
-        mariadbnu_i8749egcbc2f:
-            name: dbuser
-            password: '123'
-    databases:
-        mariadbnd_tsexoanns28c:
-            name: dbname
-            sql: ''
-    grants:
-        mariadbng_m1v2go73vp7b:
-            user: dbuser
-            table: '*.*'
-            privileges:
-                - ALL
-postgresql:
-    install: '0'
-    settings:
-        global:
-            encoding: UTF8
-            version: '9.3'
-        server:
-            postgres_password: '123'
-    databases: {  }
-    users: {  }
-    grants: {  }
-    adminer: 0
-mongodb:
-    install: '0'
-    settings:
-        auth: 1
-        bind_ip: 127.0.0.1
-        port: '27017'
-    databases: {  }
-redis:
-    install: '0'
-    settings:
-        conf_port: '6379'
-sqlite:
-    install: '0'
-    adminer: 0
-    databases: {  }
-mailcatcher:
-    install: '0'
-    settings:
-        smtp_ip: 0.0.0.0
-        smtp_port: 1025
-        http_ip: 0.0.0.0
-        http_port: '1080'
-        mailcatcher_path: /usr/local/rvm/wrappers/default
-        from_email_method: inline
-beanstalkd:
-    install: '0'
-    settings:
-        listenaddress: 0.0.0.0
-        listenport: '11300'
-        maxjobsize: '65535'
-        maxconnections: '1024'
-        binlogdir: /var/lib/beanstalkd/binlog
-        binlogfsync: null
-        binlogsize: '10485760'
-    beanstalk_console: 0
-rabbitmq:
-    install: '0'
-    settings:
-        port: '5672'
-    users: {  }
-    vhosts: {  }
-    plugins: {  }
-elastic_search:
-    install: '0'
-    settings:
-        version: 1.4.1
-        java_install: true
-solr:
-    install: '0'
-    settings:
-        version: 4.10.2
-        port: '8984'
-

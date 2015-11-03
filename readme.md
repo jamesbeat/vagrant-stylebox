@@ -1,6 +1,6 @@
 ##Introduction
 
-This covers the Intallation and setup of a Drupal Multisite instance on a Vagrant Box hosted on a remote Machine , controlled vie Drush from a remote Machine.
+This covers the Intallation and setup of a Drupal Multisite instance on a Vagrant Box hosted on a remote Machine, controlled via Drush from a remote Machine.
 
 Terms:
 
@@ -28,6 +28,8 @@ $ vagrant init
 
 ##Setup
 
+Install the guest additions plugin
+
 ```shell
 $ vagrant plugin install vagrant-vbguest
 ```
@@ -37,10 +39,9 @@ $ vagrant plugin install vagrant-vbguest
 Create Private Key on Host machine:
 
 ```shell
-ssh-keygen -t rsa -b 4096 -C "vagranthost"
+ssh-keygen -t rsa -C "vagrant@vagrant"
 ```
-
-Copy private key from Host Machine at puphpet/files/dot/ssh/id_rsa to your remote machine, for example in directory /Users/Basti/.ssh/stylebox/id_rsa
+and fill in the path to the key file in config.yaml under "private_key_path"
 
 
 ##Launch
@@ -51,6 +52,7 @@ $ sudo vagrant up
 
 ##Interact
 
+vagrant global-status
 
 ### Login on Host Machine
 

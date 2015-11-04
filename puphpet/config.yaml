@@ -3,26 +3,21 @@ vagrantfile:
     vm:
         box: puphpet/ubuntu1404-x64
         box_url: puphpet/ubuntu1404-x64
-        hostname: stylebox.local
-        memory: '4096'
+        hostname: local.puphpet
+        memory: '8192'
         cpus: '4'
-        chosen_provider: virtualbox
+        chosen_provider: parallels
         network:
-            public_network: 10.0.1.181
-            private_network: 192.168.56.101
+            private_network: 192.168.58.101
             forwarded_port:
-                vflnp_17tbw341sb9o:
-                    host: '8080'
-                    guest: '80'
-                vflnp_iu2ri3ck7oxu:
-                    host: '2223'
+                vflnp_lz4ibfyzm6rx:
+                    host: '7137'
                     guest: '22'
         post_up_message: ''
         provider:
             virtualbox:
                 modifyvm:
                     natdnshostresolver1: 'on'
-                    rtcuseutc: 'on'
                 showgui: '0'
             vmware:
                 numvcpus: 1
@@ -38,7 +33,7 @@ vagrantfile:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
                     - '--parser future'
         synced_folder:
-            vflsf_g31fi4mm270m:
+            vflsf_mceco9qhc32t:
                 source: /Users/vagranthost/Vagrant/stylebox/var/www
                 target: /var/www
                 sync_type: nfs
@@ -63,8 +58,7 @@ vagrantfile:
     ssh:
         host: null
         port: null
-        insert_key: false
-        private_key_path: '/Users/vagranthost/Vagrant/.ssh/id_rsa'
+        private_key_path: null
         username: vagrant
         guest_port: null
         keep_alive: true
@@ -81,12 +75,12 @@ users_groups:
     groups:
         - www-data
     users:
-        - 'www-data:www-data'
-        - 'vagrant:www-data'
+        - www-data
+        - 'vagrant:www-data:vagrant'
 locale:
     install: '1'
     settings:
-        default_locale: ''
+        default_locale: en_US.UTF-8
         locales:
             - en_GB.UTF-8
             - en_US.UTF-8
@@ -96,6 +90,60 @@ firewall:
 cron:
     install: '1'
     jobs: {  }
+nginx:
+    install: '0'
+    settings:
+        default_vhost: 1
+        proxy_buffer_size: 128k
+        proxy_buffers: '4 256k'
+    upstreams: {  }
+    vhosts:
+        nxv_svvik5z9ktw0:
+            server_name: awesome.dev
+            server_aliases:
+                - www.awesome.dev
+            www_root: /var/www/awesome
+            listen_port: '80'
+            index_files:
+                - index.html
+                - index.htm
+                - index.php
+            client_max_body_size: 1m
+            ssl: '0'
+            ssl_cert: ''
+            ssl_key: ''
+            ssl_port: '443'
+            ssl_protocols: ''
+            ssl_ciphers: ''
+            rewrite_to_https: '1'
+            spdy: '1'
+            locations:
+                nxvl_rdjxr90mvj97:
+                    location: /
+                    autoindex: 'off'
+                    internal: 'false'
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - /index.php$is_args$args
+                    fastcgi: ''
+                    fastcgi_index: ''
+                    fastcgi_split_path: ''
+                nxvl_b44iwxvnvjck:
+                    location: '~ \.php$'
+                    autoindex: 'off'
+                    internal: 'false'
+                    try_files:
+                        - $uri
+                        - $uri/
+                        - /index.php$is_args$args
+                    fastcgi: '127.0.0.1:9000'
+                    fastcgi_index: index.php
+                    fastcgi_split_path: '^(.+\.php)(/.*)$'
+                    fast_cgi_params_extra:
+                        - 'SCRIPT_FILENAME $request_filename'
+                        - 'APP_ENV dev'
+    proxies: {  }
 apache:
     install: '1'
     settings:
@@ -109,11 +157,11 @@ apache:
         - proxy_fcgi
         - rewrite
     vhosts:
-        av_9af5jpme39jt:
-            servername: stylebox.atlas
+        av_t7r6c7qbid39:
+            servername: stylebox.dev
             serveraliases:
-                - stylebox.atlas
-            docroot: /var/www/html/styleguide
+                - www.stylebox.dev
+            docroot: /var/www/stylebox
             port: '80'
             setenv:
                 - 'APP_ENV dev'
@@ -126,8 +174,8 @@ apache:
             ssl_protocol: ''
             ssl_cipher: ''
             directories:
-                avd_4f41kxrs6swa:
-                    path: /var/www/html/styleguide
+                avd_tz0sxrrlqy5g:
+                    path: /var/www/stylebox
                     options:
                         - Indexes
                         - FollowSymlinks
@@ -138,17 +186,17 @@ apache:
                         - 'all granted'
                     custom_fragment: ''
                     files_match:
-                        avdfm_a0c36ci319sp:
+                        avdfm_k7odzrcijd0s:
                             path: \.php$
                             sethandler: 'proxy:fcgi://127.0.0.1:9000'
                             custom_fragment: ''
                             provider: filesmatch
                     provider: directory
-        av_vsn0cftm02h7:
-            servername: stylebox.barfinder
+        av_dydi4mmneiun:
+            servername: stylebox.atlas.dev
             serveraliases:
-                - stylebox.barfinder
-            docroot: /var/www/html/styleguide
+                - www.stylebox.atlas.dev
+            docroot: /var/www/stylebox
             port: '80'
             custom_fragment: ''
             ssl: '0'
@@ -158,18 +206,19 @@ apache:
             ssl_certs_dir: ''
             ssl_protocol: ''
             ssl_cipher: ''
-        av_jenab8kaiwte:
-            servername: stylebox
-            docroot: /var/www/html
-            port: '80'
-            custom_fragment: ''
-            ssl: '0'
-            ssl_cert: ''
-            ssl_key: ''
-            ssl_chain: ''
-            ssl_certs_dir: ''
-            ssl_protocol: ''
-            ssl_cipher: ''
+            directories:
+                avd_gzc5hh0ifkwn:
+                    path: /var/www/stylebox
+                    options:
+                        - Indexes
+                        - FollowSymlinks
+                        - MultiViews
+                    allow_override:
+                        - All
+                    require:
+                        - 'all granted'
+                    custom_fragment: ''
+                    provider: directory
 php:
     install: '1'
     settings:
@@ -188,18 +237,46 @@ php:
         error_reporting: '-1'
         session.save_path: /var/lib/php/session
         date.timezone: UTC
+        memory_limit: '1028'
+        max_execution_time: '380'
+        upload_max_filesize: '512'
     fpm_ini:
         error_log: /var/log/php-fpm.log
     fpm_pools:
-        phpfp_hoqkvk50vpox:
+        phpfp_98qxt8of0lez:
             ini:
                 prefix: www
                 listen: '127.0.0.1:9000'
                 security.limit_extensions: .php
-                user: www-data
+                user: www-user
                 group: www-data
-    composer: '1'
+    composer: 1
     composer_home: ''
+xdebug:
+    install: '0'
+    settings:
+        xdebug.default_enable: '1'
+        xdebug.remote_autostart: '0'
+        xdebug.remote_connect_back: '1'
+        xdebug.remote_enable: '1'
+        xdebug.remote_handler: dbgp
+        xdebug.remote_port: '9000'
+blackfire:
+    install: '0'
+    settings:
+        server_id: ''
+        server_token: ''
+        agent:
+            http_proxy: ''
+            https_proxy: ''
+            log_file: stderr
+            log_level: '1'
+        php:
+            agent_timeout: '0.25'
+            log_file: ''
+            log_level: '1'
+xhprof:
+    install: '0'
 wpcli:
     install: '0'
     version: v0.19.0
@@ -207,44 +284,134 @@ drush:
     install: '1'
     version: 6.3.0
 ruby:
-    install: '0'
+    install: '1'
     versions: {  }
 python:
-    install: '0'
+    install: '1'
     packages: {  }
     versions: {  }
 nodejs:
     install: '0'
     npm_packages: {  }
+hhvm:
+    install: '0'
+    nightly: 0
+    composer: '1'
+    composer_home: ''
+    settings: {  }
+    server_ini:
+        hhvm.server.host: 127.0.0.1
+        hhvm.server.port: '9000'
+        hhvm.log.use_log_file: '1'
+        hhvm.log.file: /var/log/hhvm/error.log
+    php_ini:
+        display_errors: 'On'
+        error_reporting: '-1'
+        date.timezone: UTC
 mysql:
     install: '1'
     settings:
         version: '5.6'
         root_password: sushi
         override_options: {  }
-    adminer: 1
+    adminer: '1'
     users:
-        mysqlnu_vuq382m39kb8:
+        mysqlnu_lefxs3gkgsas:
             name: styler
             password: sushi
     databases:
-        mysqlnd_4fvto24wvrcp:
+        mysqlnd_4sbt5290fx4c:
             name: stylebox_atlas
             sql: ''
-        mysqlnd_oo8m52vfz9am:
-            name: styleguide_barfinder
-            sql: ''
-        mysqlnd_kj1zss7idf4n:
-            name: styleguide
-            sql: ''
     grants:
-        mysqlng_8j307sp22l45:
-            user: dbuser
-            table: '*.*'
-            privileges:
-                - ALL
-        mysqlng_gvlh2yap7pmv:
+        mysqlng_i48yvo0wfrcf:
             user: styler
             table: '*.*'
             privileges:
                 - ALL
+mariadb:
+    install: '0'
+    settings:
+        version: '10.0'
+        root_password: '123'
+        override_options: {  }
+    adminer: 0
+    users:
+        mariadbnu_qe8bgejfy2mt:
+            name: dbuser
+            password: '123'
+    databases:
+        mariadbnd_ekbqvfuuiusw:
+            name: dbname
+            sql: ''
+    grants:
+        mariadbng_0piq6tisd5tk:
+            user: dbuser
+            table: '*.*'
+            privileges:
+                - ALL
+postgresql:
+    install: '0'
+    settings:
+        global:
+            encoding: UTF8
+            version: '9.3'
+        server:
+            postgres_password: '123'
+    databases: {  }
+    users: {  }
+    grants: {  }
+    adminer: 0
+mongodb:
+    install: '0'
+    settings:
+        auth: 1
+        bind_ip: 127.0.0.1
+        port: '27017'
+    databases: {  }
+redis:
+    install: '0'
+    settings:
+        conf_port: '6379'
+sqlite:
+    install: '0'
+    adminer: 0
+    databases: {  }
+mailcatcher:
+    install: '0'
+    settings:
+        smtp_ip: 0.0.0.0
+        smtp_port: 1025
+        http_ip: 0.0.0.0
+        http_port: '1080'
+        mailcatcher_path: /usr/local/rvm/wrappers/default
+        from_email_method: inline
+beanstalkd:
+    install: '0'
+    settings:
+        listenaddress: 0.0.0.0
+        listenport: '11300'
+        maxjobsize: '65535'
+        maxconnections: '1024'
+        binlogdir: /var/lib/beanstalkd/binlog
+        binlogfsync: null
+        binlogsize: '10485760'
+    beanstalk_console: 0
+rabbitmq:
+    install: '0'
+    settings:
+        port: '5672'
+    users: {  }
+    vhosts: {  }
+    plugins: {  }
+elastic_search:
+    install: '0'
+    settings:
+        version: 1.4.1
+        java_install: true
+solr:
+    install: '0'
+    settings:
+        version: 4.10.2
+        port: '8984'
+

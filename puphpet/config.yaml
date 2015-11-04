@@ -207,7 +207,7 @@ drush:
     install: '1'
     version: 6.3.0
 ruby:
-    install: '1'
+    install: '0'
     versions: {  }
 python:
     install: '0'

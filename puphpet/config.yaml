@@ -3,7 +3,7 @@ vagrantfile:
     vm:
         box: puphpet/ubuntu1404-x64
         box_url: puphpet/ubuntu1404-x64
-        hostname: local.puphpet
+        hostname: stylebox.local
         memory: '8192'
         cpus: '4'
         chosen_provider: parallels
@@ -36,7 +36,7 @@ vagrantfile:
             vflsf_mceco9qhc32t:
                 source: /Users/vagranthost/Vagrant/stylebox/var/www
                 target: /var/www
-                sync_type: nfs
+                sync_type: default
                 smb:
                     smb_host: ''
                     smb_username: ''
@@ -58,7 +58,8 @@ vagrantfile:
     ssh:
         host: null
         port: null
-        private_key_path: null
+        insert_key: false
+        private_key_path: '/Users/vagranthost/Vagrant/.ssh/id_rsa'
         username: vagrant
         guest_port: null
         keep_alive: true
@@ -250,7 +251,7 @@ php:
                 security.limit_extensions: .php
                 user: www-user
                 group: www-data
-    composer: 1
+    composer: 0
     composer_home: ''
 xdebug:
     install: '0'
@@ -311,7 +312,7 @@ hhvm:
 mysql:
     install: '1'
     settings:
-        version: '5.6'
+        version: '5.5'
         root_password: sushi
         override_options: {  }
     adminer: '1'
